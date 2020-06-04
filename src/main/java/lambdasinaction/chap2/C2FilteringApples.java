@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilteringApples22 {
+public class C2FilteringApples {
 
     public static void main(String... args) {
 

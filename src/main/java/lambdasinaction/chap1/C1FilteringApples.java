@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FilteringApples2 {
+public class C1FilteringApples {
 
     public static void main(String... args) {
 
@@ -29,10 +29,10 @@ public class FilteringApples2 {
         //
         List<Apple> greenApples3 = filterApples(inventory, (apple -> isGreenApple(apple)));
         //
-        List<Apple> greenApples4 = filterApples(inventory, FilteringApples2::isGreenApple);
+        List<Apple> greenApples4 = filterApples(inventory, C1FilteringApples::isGreenApple);
         //
-        FilteringApples2 filteringApples2 = new FilteringApples2();
-        List<Apple> greenApples5 = filterApples(inventory, filteringApples2::isGreenApple4Demo);
+        C1FilteringApples c1FilteringApples = new C1FilteringApples();
+        List<Apple> greenApples5 = filterApples(inventory, c1FilteringApples::isGreenApple4Demo);
         //
         List<Apple> inventory1 = new ArrayList<>(inventory);
         inventory1.add(new Apple(166, "green"));
