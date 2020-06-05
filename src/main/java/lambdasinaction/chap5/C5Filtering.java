@@ -37,7 +37,7 @@ public class C5Filtering {
                 .map(Dish::getCalories)
                 .distinct()
                 .sorted()
-                .collect(toList()); // .forEach here error
+                .collect(toList()); //TODO: .forEach here error
         uniqueMenu.forEach(System.out::println);
 
         System.out.println("---- Choosing unique numbers ----");
@@ -45,7 +45,7 @@ public class C5Filtering {
         numbers.stream()
                 .filter(i -> i % 2 == 0)
                 .distinct()
-                .forEach(System.out::println); //.forEach here okay
+                .forEach(System.out::println); //TODO: .forEach here okay
 
     }
 }
