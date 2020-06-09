@@ -49,12 +49,9 @@ public class C5PuttingIntoPractice {
 
 
         // Query 6: Update all transactions so that the traders from Milan are set to Cambridge.
-        transactions.stream()
-                .map(Transaction::getTrader)
-                .filter(trader -> trader.getCity().equals("Milan"))
+        transactions.stream().map(Transaction::getTrader).filter(trader -> "Milan".equals(trader.getCity()))
                 .forEach(trader -> trader.setCity("Cambridge"));
         System.out.println(transactions);
-
 
         // Query 7: What's the highest value in all the transactions?
         int highestValue =
@@ -62,5 +59,7 @@ public class C5PuttingIntoPractice {
                         .map(Transaction::getValue)
                         .reduce(0, Integer::max);
         System.out.println(highestValue);
+        System.out.println("Hightest value :"
+                + transactions.stream().mapToInt(Transaction::getValue).max().getAsInt());
     }
 }
