@@ -1,11 +1,15 @@
 package lambdasinaction.chap5;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class C5BuildingStreams {
+    public static final String CHAP_5_DATA_TXT = "lambdasinaction/chap5/data.txt";
 
     public static void main(String... args) throws Exception {
 
@@ -43,18 +47,32 @@ public class C5BuildingStreams {
         System.out.println("---- fibonnaci via IntSupplier");
         IntSupplier fib = new IntSupplier() {
             private int previous = 0;
-            private int current = 1;
+            private int current = 0;
 
             @Override
             public int getAsInt() {
-                int nextValue = this.previous + this.current;
-                this.previous = this.current;
-                this.current = nextValue;
+                //the 1st time and the 1st number: 0
+                if (0 == this.current) {
+                    this.current = 1;
+                } else {
+                    int nextValue = this.previous + this.current;
+                    this.previous = this.current;
+                    this.current = nextValue;
+                }
                 return this.previous;
             }
         };
         IntStream.generate(fib).limit(10).forEach(System.out::println);
 
+        System.out.println("---- Nio stream etc ");
+
+        Files.lines(Paths.get(CHAP_5_DATA_TXT), Charset.defaultCharset())
+                .flatMap(line -> Arrays.stream(line.split(" ")))
+                .distinct().forEach(System.out::println);
+
+        long wordsCount = Files.lines(Paths.get(CHAP_5_DATA_TXT), Charset.defaultCharset())
+                .flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
+        System.out.println("There are " + wordsCount + " unique words in " + CHAP_5_DATA_TXT);
 
     }
 }
