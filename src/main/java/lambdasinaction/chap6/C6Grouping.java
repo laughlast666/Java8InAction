@@ -1,9 +1,6 @@
 package lambdasinaction.chap6;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 import static lambdasinaction.chap6.Dish.dishTags;
@@ -26,14 +23,22 @@ public class C6Grouping {
         System.out.println("Caloric dishes grouped by type: groupCaloricDishesByType()\n" +
                 menu.stream().collect(groupingBy(Dish::getType,
                         filtering(dish -> dish.getCalories() > 500, toList()))));
-
-        System.out.println("Dishes grouped by caloric level: " + groupDishesByCaloricLevel());
-        System.out.println("Dishes grouped by type and caloric level: " + groupDishedByTypeAndCaloricLevel());
-        System.out.println("Count dishes in groups: " + countDishesInGroups());
-        System.out.println("Most caloric dishes by type: " + mostCaloricDishesByType());
-        System.out.println("Most caloric dishes by type: " + mostCaloricDishesByTypeWithoutOprionals());
-        System.out.println("Sum calories by type: " + sumCaloriesByType());
-        System.out.println("Caloric levels by type: " + caloricLevelsByType());
+        System.out.println("Dishes grouped by caloric level: groupDishesByCaloricLevel()\n" +
+                menu.stream().collect(groupingBy(dish -> getCaloricLevel(dish))));
+        System.out.println("Dishes grouped by type and caloric level: groupDishedByTypeAndCaloricLevel()\n" +
+                menu.stream().collect(groupingBy(Dish::getType, groupingBy(dish -> getCaloricLevel(dish)))));
+        System.out.println("Count dishes in groups: countDishesInGroups()\n" +
+                menu.stream().collect(groupingBy(Dish::getType, counting())));
+        System.out.println("Most caloric dishes by type: mostCaloricDishesByType() \n" +
+                menu.stream().collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories)))));
+        System.out.println("Most caloric dishes by type:+ mostCaloricDishesByTypeWithoutOprionals() \n" +
+                menu.stream().collect(groupingBy(Dish::getType,
+                        collectingAndThen(maxBy(Comparator.comparingInt(Dish::getCalories)),
+                                Optional::get))));
+        System.out.println("Sum calories by type: sumCaloriesByType() \n" +
+                menu.stream().collect(groupingBy(Dish::getType, summingInt(Dish::getCalories))));
+        System.out.println("Caloric levels by type: caloricLevelsByType()\n" +
+                menu.stream().collect(groupingBy(Dish::getType, mapping(dish -> getCaloricLevel(dish), toSet()))));
     }
 
     private static Map<Dish.Type, List<Dish>> groupDishesByType() {
@@ -56,19 +61,24 @@ public class C6Grouping {
     private static Map<CaloricLevel, List<Dish>> groupDishesByCaloricLevel() {
         return menu.stream().collect(
                 groupingBy(dish -> {
-                    if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                    else return CaloricLevel.FAT;
+                    return getCaloricLevel(dish);
                 }));
+    }
+
+    private static CaloricLevel getCaloricLevel(Dish dish) {
+        if (dish.getCalories() <= 400)
+            return CaloricLevel.DIET;
+        else if (dish.getCalories() <= 700)
+            return CaloricLevel.NORMAL;
+        else
+            return CaloricLevel.FAT;
     }
 
     private static Map<Dish.Type, Map<CaloricLevel, List<Dish>>> groupDishedByTypeAndCaloricLevel() {
         return menu.stream().collect(
                 groupingBy(Dish::getType,
                         groupingBy((Dish dish) -> {
-                            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                            else return CaloricLevel.FAT;
+                            return getCaloricLevel(dish);
                         })
                 )
         );
@@ -101,9 +111,7 @@ public class C6Grouping {
         return menu.stream().collect(
                 groupingBy(Dish::getType, mapping(
                         dish -> {
-                            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-                            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                            else return CaloricLevel.FAT;
+                            return getCaloricLevel(dish);
                         },
                         toSet())));
     }
