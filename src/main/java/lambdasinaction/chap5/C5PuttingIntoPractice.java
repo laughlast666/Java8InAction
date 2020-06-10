@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 public class C5PuttingIntoPractice {
@@ -41,9 +42,13 @@ public class C5PuttingIntoPractice {
         // Query 4: Return a string of all traders’ names sorted alphabetically.
         String traderStr = transactions.stream().map(t -> t.getTrader().getName() + " ")
                 .sorted().distinct().reduce("", (n1, n2) -> n1 + n2);
-        System.out.println("All traders'name in one line:\n" + traderStr);
-        System.out.println("All traders'name joining one line:\n" + transactions.stream().map(t -> t.getTrader().getName())
+        System.out.println("All unique traders'name in one line:\n" + traderStr);
+        System.out.println("All unique traders'name joining in one line:\n"
+                + transactions.stream().map(t -> t.getTrader().getName())
                 .sorted().distinct().collect(Collectors.joining(", ")));
+        System.out.println("All traders'name reducing in one line:\n"
+                + transactions.stream()
+                .collect(reducing("", t -> t.getTrader().getName() + " ", (n1, n2) -> n1 + n2)));
 
         // Query 5: Are there any trader based in Milan?
         boolean milanBased =
